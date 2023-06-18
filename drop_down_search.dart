@@ -15,6 +15,7 @@ class DropdownSearch extends StatelessWidget{
   final double                        height;
   final double                        sugestionHeight;
   final String                        failMessage;
+  final Icon?                         iconClear;
 
 
   // constructor
@@ -24,6 +25,7 @@ class DropdownSearch extends StatelessWidget{
       this.height = 40,
       this.width = 300,
       this.controller,
+      this.iconClear,
       this.failMessage = 'fail:not sugestion',
       required this.listSugestion,
       super.key
@@ -77,6 +79,13 @@ class DropdownSearch extends StatelessWidget{
   Widget build(BuildContext context) {
     // inicialicer overlay field
     _overlay = Overlay.of(context);
+    final suffix = iconClear != null 
+      ? IconButton(
+          icon: iconClear!, 
+          onPressed: controller!.clear,
+        )
+      : null;
+ 
 
     return CompositedTransformTarget(
       link: layerLink,
@@ -86,6 +95,8 @@ class DropdownSearch extends StatelessWidget{
           width: width,
           height: height,
           child: TextField( 
+            decoration:InputDecoration(
+              suffixIcon: suffix             ),
             onSubmitted: _handleSubmit,
             onChanged: _findSugestion,
             controller: controller,
