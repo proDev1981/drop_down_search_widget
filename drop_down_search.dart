@@ -14,6 +14,7 @@ class DropdownSearch extends StatelessWidget{
   final double                        width;
   final double                        height;
   final double                        sugestionHeight;
+  final String                        failMessage;
 
 
   // constructor
@@ -23,6 +24,7 @@ class DropdownSearch extends StatelessWidget{
       this.height = 40,
       this.width = 300,
       this.controller,
+      this.failMessage = 'fail:not sugestion',
       required this.listSugestion,
       super.key
     }){
@@ -62,7 +64,7 @@ class DropdownSearch extends StatelessWidget{
   }
   void _findSugestion(String query){
     final res = listSugestion.where((e) => e.toLowerCase().contains(query.toLowerCase())).toList();
-    if(res.isEmpty) res.add("not found");
+    if(res.isEmpty) res.add(failMessage);
     dependecies.value = res;
   }
   void _handleSubmit(String value){

@@ -25,10 +25,16 @@ class OverlayItem extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
 
+    final color = value.contains('fail:') ? Colors.grey : null;
+    final result = value.replaceFirst('fail:','');
+
     return  Material(
               child: ListTile(
                       onTap: _handleOnPressed,
-                      title: Text(value),
+                      title: Text(
+                                result,
+                                style: TextStyle(color: color)
+                              ),
               ),
     );
   }
