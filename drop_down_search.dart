@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'show_list_tile.dart';
-
+// TODO: tengo que implementar stylos para el widget
 // ignore: must_be_immutable
 class DropdownSearch extends StatelessWidget{
   // properties
@@ -11,10 +11,17 @@ class DropdownSearch extends StatelessWidget{
   late  ValueNotifier<List<String>>   dependecies;
   late  LayerLink                     layerLink;
   final List<String>                  listSugestion;
+  final double                        width;
+  final double                        height;
+  final double                        sugestionHeight;
+
 
   // constructor
   DropdownSearch
     ({
+      this.sugestionHeight = 200,
+      this.height = 40,
+      this.width = 300,
       this.controller,
       required this.listSugestion,
       super.key
@@ -27,11 +34,10 @@ class DropdownSearch extends StatelessWidget{
     _overlayEntry = OverlayEntry(builder: (context){
 
       return Positioned(
-        // TODO: tengo que obtener tamaño del textfield
-        width: 200,
-        height: 400,
+        width: width,
+        height: sugestionHeight,
         child: CompositedTransformFollower(
-          offset: const Offset(0,50),
+          offset: Offset(0,height),
           link: layerLink ,
           child: ShowListTile(
             dependecies,
@@ -59,6 +65,10 @@ class DropdownSearch extends StatelessWidget{
     if(res.isEmpty) res.add("not found");
     dependecies.value = res;
   }
+  void _handleSubmit(String value){
+    _overlayEntry.remove();
+    dependecies.value = listSugestion;
+  }
 
   // builder
   @override
@@ -70,9 +80,14 @@ class DropdownSearch extends StatelessWidget{
       link: layerLink,
       child: Focus(
         onFocusChange: _handleFocus,
-        child:  TextField( 
-          onChanged: _findSugestion,
-          controller: controller,
+        child:  SizedBox(
+          width: width,
+          height: height,
+          child: TextField( 
+            onSubmitted: _handleSubmit,
+            onChanged: _findSugestion,
+            controller: controller,
+          ),
         ),
       ),
     );
