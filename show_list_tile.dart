@@ -6,20 +6,22 @@ import 'overlay_item.dart';
 // ignore: must_be_immutable
 class ShowListTile<T> extends StatefulWidget {
   // properties
-  Widget?             first;
-  Widget?             last;
-  double?             separation;
-  //MainAxisAlignment?  alignment;
-  double?             width;
-  double?             height;
+  Widget?                     first;
+  Widget?                     last;
+  double?                     separation;
+  //MainAxisAlignment?        alignment;
+  double?                     width;
+  double?                     height;
   final ValueListenable<T>    dep;
   final TextEditingController controller;
   final OverlayEntry          parent;
+  List<FocusNode>?       focusEntries;
   // constructors
   ShowListTile(this.dep,{
     this.height,
     this.width,
     this.separation,
+    this.focusEntries,
     required this.parent,
     required this.controller,
     //this.alignment,
@@ -28,9 +30,10 @@ class ShowListTile<T> extends StatefulWidget {
     super.key
     }){ 
     //alignment   = alignment   ?? MainAxisAlignment.start;
-    separation  = separation  ?? 0;
-    width       = width       ?? 150;
-    height      = height      ?? 100;
+    separation    = separation  ?? 0;
+    width         = width       ?? 150;
+    height        = height      ?? 100;
+    focusEntries ??= <FocusNode>[];
   }
   // state
   @override
@@ -59,6 +62,7 @@ class _ShowListTileState<T> extends State<ShowListTile> {
   @override
   void dispose() {
     widget.dep.removeListener(_valueChanged);
+    widget.focusEntries?.clear();
     super.dispose();
   }
 
@@ -69,19 +73,25 @@ class _ShowListTileState<T> extends State<ShowListTile> {
   @override
   Widget build(BuildContext context) {
     final list = (widget.dep.value as List);
+    if(widget.focusEntries!.isNotEmpty) widget.focusEntries!.clear();
 
       return SizedBox(
         height: widget.height,
         width: widget.width,
         child: ListView.builder(
           itemCount: list.length,
-          itemBuilder: (context, index) => 
-            OverlayItem(
+          itemBuilder: (context, index){
+
+            widget.focusEntries?.add(FocusNode());
+
+            return OverlayItem(
+              focusNode: widget.focusEntries?[index],
               value: list[index],
               parent: widget.parent,
               controller: widget.controller ,
-            ),
-          ),
+            );
+          }
+        )
       );
     }
 }

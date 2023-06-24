@@ -7,6 +7,7 @@ class OverlayItem extends StatelessWidget{
     required this.value,
     required this.controller,
     required this.parent,
+    this.focusNode,
     super.key
   });
 
@@ -14,6 +15,7 @@ class OverlayItem extends StatelessWidget{
   final String                value;
   final TextEditingController controller;
   final OverlayEntry          parent;
+  final FocusNode?            focusNode;
 
   // methos
   void _handleOnPressed(){
@@ -30,6 +32,7 @@ class OverlayItem extends StatelessWidget{
 
     return  Material(
               child: ListTile(
+                      focusNode: focusNode,
                       onTap: _handleOnPressed,
                       title: Text(
                                 result,
